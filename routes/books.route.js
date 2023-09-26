@@ -20,10 +20,22 @@ const books = [
      cover:"soft cover"
     }
  ]
+/**
+ * @desc Get All Books
+ * @route /api/books
+ * @method Get
+ * @access Public
+ */
  router.get('/',(req,res)=>{
     res.status(200).json({books_no:books.length,books})
  })
  
+ /**
+ * @desc Get Books By ID
+ * @route /api/books/:id
+ * @method Get
+ * @access Public
+ */
 router.get('/:id',(req,res)=>{
     const book = books.find(b=>b.id === +req.params.id);
     if (book) {
@@ -32,16 +44,16 @@ router.get('/:id',(req,res)=>{
         res.status(404).json(`there is no error for this id ${req.params.id}`)
     }
 })
+/**
+ * @desc Create a New Book
+ * @route /api/books
+ * @method Post
+ * @access Public
+ */
 router.post('/',(req,res)=>{
-    const schema =Joi.object({
-        title:Joi.string().trim().min(3).max(50).required(),
-        auther:Joi.string().trim().min(3).max(50).required(),
-        description:Joi.string().trim().min(3).max(50),
-        price:Joi.number().min(0).required(),
-    //    cover:Joi.string().min(0).required()
-    }) 
-    const {error}=schema.validate(req.body)
-    if (error) return res.status(404).json({ErorMessage:error.details[0].message})
+   
+   const {error} =validateCreateBook(req.body)
+     if (error) return res.status(404).json({ErorMessage:error.details[0].message})
         
     const book = {
         id:books.length+1,
@@ -55,5 +67,45 @@ router.post('/',(req,res)=>{
         
     
 })
+ /**
+ * @desc Update a book By ID
+ * @route /api/books/:id
+ * @method PUT
+ * @access Public
+ */
+router.put('/:id',(req,res)=>{
+    const book = books.find((b)=>b.id === +req.params.id)
+    const {error} = validateUpdateBook(req.body)
+    if (book) {
+        res.status(200).json({message : `the book for id ${book.id} is updated`})
+    } else {
+        res.status(404).json({message : `the book for id ${book.id} is not found`})  
+    }
+})
+//validate Update book
+function validateUpdateBook(obj){
+
+    const schema =Joi.object({
+        title:Joi.string().trim().min(3).max(50),
+        auther:Joi.string().trim().min(3).max(50),
+        description:Joi.string().trim().min(3).max(50),
+        price:Joi.number().min(0),
+        //cover:Joi.string().min(0)
+    }) 
+    return schema.validate(obj)  
+}
+
+//Validate create book
+function validateCreateBook(obj){
+
+    const schema =Joi.object({
+        title:Joi.string().trim().min(3).max(50).required(),
+        auther:Joi.string().trim().min(3).max(50).required(),
+        description:Joi.string().trim().min(3).max(50),
+        price:Joi.number().min(0).required(),
+        //cover:Joi.string().min(0).required()
+    }) 
+    return schema.validate(obj)  
+}
 
 module.exports=router;
