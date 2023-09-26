@@ -76,6 +76,9 @@ router.post('/',(req,res)=>{
 router.put('/:id',(req,res)=>{
     const book = books.find((b)=>b.id === +req.params.id)
     const {error} = validateUpdateBook(req.body)
+    if (error) {
+        return res.status(404).json({message:error.details[0].message})
+    }
     if (book) {
         res.status(200).json({message : `the book for id ${book.id} is updated`})
     } else {
@@ -85,12 +88,15 @@ router.put('/:id',(req,res)=>{
  /**
  * @desc Delete a book By ID
  * @route /api/books/:id
- * @method delete
+ * @method Delete
  * @access Public
  */
  router.delete('/:id',(req,res)=>{
     const book = books.find((b)=>b.id === +req.params.id)
     const {error} = validateUpdateBook(req.body)
+    if (error) {
+        return res.status(404).json({message:error.details[0].message})
+    }
     if (book) {
         res.status(200).json({message : `the book for id ${book.id} is deleted`})
     } else {
