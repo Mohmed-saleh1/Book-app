@@ -82,6 +82,21 @@ router.put('/:id',(req,res)=>{
         res.status(404).json({message : `the book for id ${book.id} is not found`})  
     }
 })
+ /**
+ * @desc Delete a book By ID
+ * @route /api/books/:id
+ * @method delete
+ * @access Public
+ */
+ router.delete('/:id',(req,res)=>{
+    const book = books.find((b)=>b.id === +req.params.id)
+    const {error} = validateUpdateBook(req.body)
+    if (book) {
+        res.status(200).json({message : `the book for id ${book.id} is deleted`})
+    } else {
+        res.status(404).json({message : `the book for id ${book.id} is not found`})  
+    }
+})
 //validate Update book
 function validateUpdateBook(obj){
 
