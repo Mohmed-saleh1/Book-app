@@ -4,22 +4,6 @@ const router = express.Router();
 const AutherModel = require('../models/auther.model.js')
 
 
-const authers = [
-   {
-    id:1,
-    firstName:"MOhamed",
-    lastName:"Saleh",
-    nationality:"Egypt",
-    image:"default-image.png"
-   },
-    {
-    id:2,
-    firstName:"ibrahim",
-    lastName:"elsakaram",
-    nationality:"saudia ",
-    image:"default-image.png"
-   }
- ]
 /**
  * @desc Get All authers
  * @route /api/books
@@ -28,7 +12,7 @@ const authers = [
  */
  router.get('/',async(req,res)=>{
     try {
-        const authers= await AutherModel.find({})
+        const authers= await AutherModel.find({}).sort({firstName:-1}).select("firstName lastName -_id")
         res.status(200).json(authers);
     } catch (error) {
 
@@ -148,7 +132,7 @@ function validateUpdateAuther(obj){
         nationality:Joi.string().trim().min(3).max(50),
         image:Joi.string().min(1).trim().max(20) 
     }) 
-    return schema.validate(obj)  
+    return schema.validate(obj)   
 }
 
 //Validate create auther
