@@ -31,6 +31,6 @@ const autherSchema = new mongoose.Schema({
     }
 },{timestamps:true})
 
-const AutherModel = mongoose.model("Authers",autherSchema)
+const Author = mongoose.model("Authers",autherSchema)
 
-module.exports = AutherModel;
+module.exports = Author;
