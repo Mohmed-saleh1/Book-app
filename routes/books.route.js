@@ -1,6 +1,6 @@
 const express = require('express');
-const Joi = require('joi');
 const router = express.Router();
+const {}= require('../models/book.model.js')
 
 
 const books = [
@@ -103,30 +103,6 @@ router.put('/:id',(req,res)=>{
         res.status(404).json({message : `the book for id ${book.id} is not found`})  
     }
 })
-//validate Update book
-function validateUpdateBook(obj){
 
-    const schema =Joi.object({
-        title:Joi.string().trim().min(3).max(50),
-        auther:Joi.string().trim().min(3).max(50),
-        description:Joi.string().trim().min(3).max(50),
-        price:Joi.number().min(0),
-        //cover:Joi.string().min(0)
-    }) 
-    return schema.validate(obj)  
-}
-
-//Validate create book
-function validateCreateBook(obj){
-
-    const schema =Joi.object({
-        title:Joi.string().trim().min(3).max(50).required(),
-        auther:Joi.string().trim().min(3).max(50).required(),
-        description:Joi.string().trim().min(3).max(50),
-        price:Joi.number().min(0).required(),
-        //cover:Joi.string().min(0).required()
-    }) 
-    return schema.validate(obj)  
-}
 
 module.exports=router;
