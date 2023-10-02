@@ -3,9 +3,11 @@ const express= require('express');
 const booksRouter = require('./routes/books.route')
 const authersRouter = require('./routes/authers.route')
 const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+dotenv.config()
 
 mongoose
-    .connect('mongodb://127.0.0.1:27017/bookStoreDB')
+    .connect(process.env.MONGO_URI)
     .then(()=>console.log("Connected to MongoDB... "))
     .catch((error)=>console.log("Connection Failed to MongoDB !",error.reason))
 
@@ -23,7 +25,7 @@ app.use('/api/authers',authersRouter)
 
 
 //Running The Server
-const port = 4000
+const port = process.env.PORT
  app.listen(port,(req,res)=>{
-console.log(`server is working on port ${port}`);
+console.log(`server is working IN ${process.env.NODE_ENV} on port ${port}`);
  })
