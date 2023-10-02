@@ -3,6 +3,7 @@ const express= require('express');
 const booksRouter = require('./routes/books.route')
 const authersRouter = require('./routes/authers.route')
 const logger = require('./middlewares/logger.js')
+const {notFound,errorHandler} = require('./middlewares/errors')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 dotenv.config()
@@ -19,11 +20,13 @@ const app = express();
 
 //apply middlewares
 app.use(express.json());
-app.use(logger.logger)
+app.use(logger)
 
 // Mount Routes
 app.use('/api/books',booksRouter)
 app.use('/api/authers',authersRouter)
+app.use(notFound)
+app.use(errorHandler)
 
 //Running The Server
 const port = process.env.PORT
