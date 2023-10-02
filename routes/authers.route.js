@@ -125,7 +125,6 @@ router.put('/:id',async(req,res)=>{
 })
 //validate Update auther
 function validateUpdateAuther(obj){
-
     const schema =Joi.object({
         firstName:Joi.string().trim().min(3).max(50) ,
         lastName:Joi.string().trim().min(3).max(50) ,
