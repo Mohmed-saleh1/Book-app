@@ -33,7 +33,6 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User',userSchema)
 
 // Validate create new user 
-
 function validateRegisterUser(obj){
 
     const Schema = Joi.object({
@@ -45,8 +44,8 @@ function validateRegisterUser(obj){
 
     return Schema.validate(obj)
 }
-// Validate Login user
 
+// Validate Login user
 function validateLoginUser(obj){
 
     const Schema = Joi.object({
@@ -58,7 +57,6 @@ function validateLoginUser(obj){
 }
 
 // Validate Update user
-
 function validateUpdateUser(obj){
 
     const Schema = Joi.object({
