@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
         minlength:5,
     },
     isAdmin:{
-        type:boolean,
+        type:Boolean,
        default:false
     }
 },{timestamps:true})
@@ -36,9 +36,9 @@ const User = mongoose.model('User',userSchema)
 function validateRegisterUser(obj){
 
     const Schema = Joi.object({
-        email:Joi.trim().String().required().min(5).max(100).email(),
-        userName:Joi.trim().String().required().min(3).max(100),
-        password:Joi.string().trim().min(5).required(),
+        email:Joi.string().trim().min(5).max(100).email().required(),
+        userName:Joi.string().trim().min(3).max(100).required(),
+        password:Joi.string().trim().trim().min(5).required(),
         isAdmin:Joi.bool()
     })
 
@@ -49,7 +49,7 @@ function validateRegisterUser(obj){
 function validateLoginUser(obj){
 
     const Schema = Joi.object({
-        email:Joi.trim().String().required().min(5).max(100).email(),
+        email:Joi.string().trim().required().min(5).max(100).email(),
         password:Joi.string().trim().min(5).required(),
     })
 

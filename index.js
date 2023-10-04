@@ -1,9 +1,9 @@
 const express= require('express');
-
 const booksRouter = require('./routes/books.route')
 const authersRouter = require('./routes/authers.route')
 const logger = require('./middlewares/logger.js')
 const {notFound,errorHandler} = require('./middlewares/errors')
+const authPath = require ('./routes/auth')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 dotenv.config()
@@ -25,6 +25,7 @@ app.use(logger)
 // Mount Routes
 app.use('/api/books',booksRouter)
 app.use('/api/authers',authersRouter)
+app.use('/api/auth',authPath)
 app.use(notFound)
 app.use(errorHandler)
 
