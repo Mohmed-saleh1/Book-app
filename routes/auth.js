@@ -11,15 +11,14 @@ const jwt = require('jsonwebtoken')
  * @route /api/auth
  * @access public
  **/
+
 router.post('/register',asyncHandler(async(req,res)=>{
 
-    const{error}=validateRegisterUser(req.body)
+          const{error}=validateRegisterUser(req.body)
          if (error) return res.status(404).json({ErorMessage:error.details[0].message})
 
          const user = await User.findOne({email:req.body.email})
-         if(user){
-          return  res.status(400).json({Message:"this user allready exists"})
-         }
+         if(user) return  res.status(400).json({Message:"this user allready exists"})
            req.body.password = bcrypt.hashSync(req.body.password,10)
 
          const newUser = new User({
@@ -34,6 +33,7 @@ router.post('/register',asyncHandler(async(req,res)=>{
          res.status(201).json({...other,token})
         
 }))
+
 /**
  * @desc user login 
  * @method Post 
@@ -51,7 +51,7 @@ router.post('/login',asyncHandler(async(req,res)=>{
       const isMatch=await bcrypt.compareSync(req.body.password,user.password)
       if (!isMatch) return res.status(404).json({message:"inValid Password "})
       const token = jwt.sign({id:user.id,isAdmin:user.isAdmin},process.env.JWT_SECRET_KEY)
-       
+
       const {password,...other}=user._doc;
       res.status(200).json({...other,token})
 
@@ -70,29 +70,6 @@ router.get('/',asyncHandler(async(req,res)=>{
    }
    res.status(404).json({Message:"there is no users"})
 }))
-/**
- * @desc Update user 
- * @method Put 
- * @route /api/auth
- * @access public
- **/
-// router.put('/',asyncHandler(async(req,res)=>{
-
-//    const {error} = validateUpdateUser(req.body)
-//    if (error) return res.status(404).json({errorMessage:error.details[0].message})
-
-//    const {id}=req.body
-//    const user = await User.findByIdAndUpdate(id,{
-//       $set:{
-//          email:req.body.email,
-//          isAdmin:req.body.isAdmin,
-//          userName:req.body.userName,
-//          password:req.body.password
-//       }
-//    },{new:true})
-//    res.status(200).json(user)
-
-// }))
 
 /**
  * @desc Delete user 

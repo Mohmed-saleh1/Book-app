@@ -4,6 +4,8 @@ const authersRouter = require('./routes/authers.route')
 const logger = require('./middlewares/logger.js')
 const {notFound,errorHandler} = require('./middlewares/errors')
 const authPath = require ('./routes/auth')
+const usersPath = require ('./routes/users')
+
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 dotenv.config()
@@ -26,6 +28,8 @@ app.use(logger)
 app.use('/api/books',booksRouter)
 app.use('/api/authers',authersRouter)
 app.use('/api/auth',authPath)
+app.use('/api/users',usersPath)
+
 app.use(notFound)
 app.use(errorHandler)
 
