@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcryptjs')
-const {User,validateUpdateUser,validateRegisterUser,validateLoginUser}= require('../models/user.model')
+const {User,validateRegisterUser,validateLoginUser}= require('../models/user.model')
+const jwt = require('jsonwebtoken')
 
 /**
  * @desc creating a new user 
@@ -40,20 +41,21 @@ router.post('/register',asyncHandler(async(req,res)=>{
  * @access public
  **/
 router.post('/login',asyncHandler(async(req,res)=>{
-   const{error}=validateLoginUser(req.body)
-   if (error) {
-     return res.status(400).json({errorMessage:error.details[0].message})
-   }
-   const user =await User.findOne({email:req.body.email})
-   if(user){
-       const isMatch=await bcrypt.compareSync(req.body.password,user.password)
-      if (isMatch) {
-         res.status(200).json({message:"valid user"})
-      }else{
-         res.status(404).json({message:"inValid user"})
-      }
-   }
-} 
+
+      const{error}=validateLoginUser(req.body)
+      if (error) return res.status(400).json({errorMessage:error.details[0].message})
+
+      const user =await User.findOne({email:req.body.email})
+      if(!user) return  res.status(404).json({message:"inValid Email"})
+      
+      const isMatch=await bcrypt.compareSync(req.body.password,user.password)
+      if (!isMatch) return res.status(404).json({message:"inValid Password "})
+      const token = jwt.sign({id:user.id,isAdmin:user.isAdmin},process.env.JWT_SECRET_KEY)
+       
+      const {password,...other}=user._doc;
+      res.status(200).json({...other,token})
+
+ }
 ))
 /**
  * @desc creating a new user 
