@@ -3,7 +3,7 @@ const router = express.Router()
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcryptjs')
 const {User,validateUpdateUser}= require('../models/user.model')
-const {verifyToken} = require('../middlewares/verifyToken')
+const {verifyTokenAndAuthorization} = require('../middlewares/verifyToken')
 
 /**
  * @desc Update user 
@@ -11,7 +11,7 @@ const {verifyToken} = require('../middlewares/verifyToken')
  * @route /api/auth
  * @access public
  **/
-router.put('/:id',verifyToken,asyncHandler(async(req,res)=>{
+router.put('/:id',verifyTokenAndAuthorization,asyncHandler(async(req,res)=>{
 
    const {error} = validateUpdateUser(req.body)
    if (error) return res.status(404).json({errorMessage:error.details[0].message})
@@ -23,8 +23,7 @@ router.put('/:id',verifyToken,asyncHandler(async(req,res)=>{
       $set:{
         
          email:req.body.email,
-         isAdmin:req.body.isAdmin,
-         userName:req.body.userName,
+          userName:req.body.userName,
          password:req.body.password
       }
    },{new:true}).select('-password')

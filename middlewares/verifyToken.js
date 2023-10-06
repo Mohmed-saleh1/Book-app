@@ -7,8 +7,9 @@ function verifyToken(req,res,next){
         try {
             const decoded = jwt.verify(token,process.env.JWT_SECRET_KEY)
             req.user=decoded;
-            if (req.user.id!==req.params.id) return res.status(401).json({Message:"you are not allowed"})
+            res.status(401).json({Message:"you are not allowed"})
             next();
+
         } catch (error) {
         res.status(401).json({Message:"Invalid Token Provided"});
         }
@@ -23,9 +24,20 @@ function verifyTokenAndAuthorization (req,res,next){
         if (req.user.id===req.params.id ||req.user.isAdmin){
             next()
         }else{
-         return res.status(401).json({Message:"you are not allowed"})
+         return res.status(403).json({Message:"you are not allowed"})
 
         }
     })
 }
-module.exports={verifyToken,verifyTokenAndAuthorization};
+// Verify Token & Admin 
+function verifyTokenAndAdmin (req,res,next){
+    verifyToken(req,res,()=>{
+        if (req.user.isAdmin){
+            next()
+        }else{
+         return res.status(403).json({Message:"you are not allowed"})
+
+        }
+    })
+}
+module.exports={verifyToken,verifyTokenAndAuthorization,verifyTokenAndAdmin};

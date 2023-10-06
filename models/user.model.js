@@ -63,8 +63,7 @@ function validateUpdateUser(obj){
         email:Joi.string().trim().min(5).max(100).email(),
         userName:Joi.string().trim().min(3).max(100),
         password:Joi.string().trim().min(5),
-        isAdmin:Joi.bool()
-    })
+     })
 
     return Schema.validate(obj)
 }
