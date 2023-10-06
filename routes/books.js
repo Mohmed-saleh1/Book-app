@@ -40,7 +40,7 @@ router.post('/',verifyTokenAndAdmin,asyncHandler(async(req,res)=>{
  * @access Public
  */
  router.get('/',asyncHandler(async(req,res)=>{
-    const book = await Books.find({})
+    const book = await Books.find({price:{$gte:10}})
     if(book){
         if(book.length==0){
             res.status(200).json("there is no books ")

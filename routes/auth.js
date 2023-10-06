@@ -1,33 +1,32 @@
 const express = require('express')
 const router = express.Router()
+
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const {User,validateRegisterUser,validateLoginUser}= require('../models/user.model')
-const {verifyTokenAndAdmin} = require("../middlewares/verifyToken")
+
 /**
  * @desc creating a new user 
  * @method Post 
  * @route /api/auth
  * @access public
  **/
-
 router.post('/register',asyncHandler(async(req,res)=>{
 
-          const{error}=validateRegisterUser(req.body)
+         const{error}=validateRegisterUser(req.body)
          if (error) return res.status(404).json({ErorMessage:error.details[0].message})
 
-         const user = await User.findOne({email:req.body.email})
+         let user = await User.findOne({email:req.body.email})
          if(user) return  res.status(400).json({Message:"this user allready exists"})
            req.body.password = bcrypt.hashSync(req.body.password,10)
 
-         const newUser = new User({
+          user = new User({
             email:req.body.email,
             userName:req.body.userName,
             password:req.body.password,
           })
-          const result = await newUser.save()
-          const token = null;
+          const result = await user.save()
+          const token = user.generateToken()
           const {password,...other}=result._doc;
          res.status(201).json({...other,token})
         
@@ -49,12 +48,12 @@ router.post('/login',asyncHandler(async(req,res)=>{
       
       const isMatch=await bcrypt.compareSync(req.body.password,user.password)
       if (!isMatch) return res.status(404).json({message:"inValid Password "})
-      const token = jwt.sign({id:user.id,isAdmin:user.isAdmin},process.env.JWT_SECRET_KEY)
+      const token = user.generateToken()
 
       const {password,...other}=user._doc;
       res.status(200).json({...other,token})
-
- }
+      
+  }
 ))
 
 module.exports=router;
