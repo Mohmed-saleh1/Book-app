@@ -2,6 +2,7 @@ const express = require('express');
 const Joi = require('joi');
 const router = express.Router();
 const AutherModel = require('../models/auther.model.js')
+const {verifyTokenAndAdmin} = require('../middlewares/verifyToken.js')
 
 
 /**
@@ -45,10 +46,10 @@ router.get('/:id',async(req,res)=>{
 /**
  * @desc Create a New auther
  * @route /api/authers
- * @method Post
- * @access Public
+ * @method post
+ * @access private (Only admins)
  */
-router.post('/',async(req,res)=>{
+router.post('/',verifyTokenAndAdmin,async(req,res)=>{
     
    const {error} =validateCreateAuther(req.body)
      if (error) return res.status(404).json({ErorMessage:error.details[0].message})
@@ -74,9 +75,9 @@ router.post('/',async(req,res)=>{
  * @desc Update an auther By ID
  * @route /api/authers/:id
  * @method PUT
- * @access Public
+ * @access private (Only admins)
  */
-router.put('/:id',async(req,res)=>{
+router.put('/:id',verifyTokenAndAdmin,async(req,res)=>{
 
      const {error} = validateUpdateAuther(req.body)
     if (error) {
@@ -103,9 +104,9 @@ router.put('/:id',async(req,res)=>{
  * @desc Delete an auther By ID
  * @route /api/autheras/:id
  * @method Delete
- * @access Public
+ * @access private (Only admins)
  */
- router.delete('/:id',async(req,res)=>{
+ router.delete('/:id',verifyTokenAndAdmin,async(req,res)=>{
      const {error} = validateUpdateAuther(req.body)
     if (error) {
         return res.status(404).json({message:error.details[0].message})
