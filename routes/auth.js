@@ -25,8 +25,7 @@ router.post('/register',asyncHandler(async(req,res)=>{
             email:req.body.email,
             userName:req.body.userName,
             password:req.body.password,
-            isAdmin:req.body.isAdmin
-         })
+          })
           const result = await newUser.save()
           const token = null;
           const {password,...other}=result._doc;
