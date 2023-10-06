@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {Books,validateCreateBook,validateUpdateBook}= require('../models/book.model.js')
 const asyncHandler = require('express-async-handler')
-const {verifyTokenAndAdmin} = require('../middlewares/verifyToken')
+const {verifyTokenAndAdmin} = require('../middlewares/verifyToken.js')
 
 /**
  * @desc create a new book
