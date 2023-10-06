@@ -3,8 +3,7 @@ const router = express.Router()
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcryptjs')
 const {User,validateUpdateUser}= require('../models/user.model')
-const jwt = require('jsonwebtoken')
-
+const {verifyToken} = require('../middlewares/verifyToken')
 
 /**
  * @desc Update user 
@@ -12,7 +11,7 @@ const jwt = require('jsonwebtoken')
  * @route /api/auth
  * @access public
  **/
-router.put('/:id',asyncHandler(async(req,res)=>{
+router.put('/:id',verifyToken,asyncHandler(async(req,res)=>{
 
    const {error} = validateUpdateUser(req.body)
    if (error) return res.status(404).json({errorMessage:error.details[0].message})
@@ -29,9 +28,22 @@ router.put('/:id',asyncHandler(async(req,res)=>{
          password:req.body.password
       }
    },{new:true}).select('-password')
-   console.log(req.headers.token)
-   res.status(200).json(user)
+    res.status(200).json(user)
 
+}))
+
+/**
+ * @desc get all users
+ * @method Post 
+ * @route /api/auth
+ * @access public
+ **/
+router.get('/',asyncHandler(async(req,res)=>{
+   const users = await User.find({}).select("-password")
+   if (users) {
+      return res.status(200).json({result:users.length,users})
+   }
+   res.status(404).json({Message:"there is no users"})
 }))
 
 module.exports=router

@@ -2,8 +2,8 @@ const express = require('express')
 const router = express.Router()
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcryptjs')
-const {User,validateRegisterUser,validateLoginUser}= require('../models/user.model')
 const jwt = require('jsonwebtoken')
+const {User,validateRegisterUser,validateLoginUser}= require('../models/user.model')
 
 /**
  * @desc creating a new user 
@@ -57,19 +57,6 @@ router.post('/login',asyncHandler(async(req,res)=>{
 
  }
 ))
-/**
- * @desc creating a new user 
- * @method Post 
- * @route /api/auth
- * @access public
- **/
-router.get('/',asyncHandler(async(req,res)=>{
-   const users = await User.find({})
-   if (users) {
-      return res.status(200).json({result:users.length,users})
-   }
-   res.status(404).json({Message:"there is no users"})
-}))
 
 /**
  * @desc Delete user 
