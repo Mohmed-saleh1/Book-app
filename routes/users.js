@@ -45,4 +45,33 @@ router.get('/',verifyTokenAndAdmin,asyncHandler(async(req,res)=>{
    res.status(404).json({Message:"there is no users"})
 }))
 
+/**
+ * @desc get user by id
+ * @method Post 
+ * @route /api/users/id
+ * @access private (only admins)
+ **/
+router.get('/:id',verifyTokenAndAuthorization,asyncHandler(async(req,res)=>{
+   const users = await User.findById(req.params.id).select("-password")
+   if (users) {
+      return res.status(200).json({result:users.length,users})
+   }
+   res.status(404).json({Message:"there is no users"})
+}))
+/**
+ * @desc Delete user 
+ * @method delete 
+ * @route /api/users/id
+ * @access private (only admin & user himself )
+ **/
+router.delete('/:id',verifyTokenAndAdmin,asyncHandler(async(req,res)=>{
+
+   const {id}=req.params
+   try {
+      const user = await User.findByIdAndDelete(id)
+      res.status(200).json({message:"the user deleted successfully ",user})
+   } catch (error) {
+      res.status(404).json({errorMessage:error.details[0].message})
+   }
+}))
 module.exports=router

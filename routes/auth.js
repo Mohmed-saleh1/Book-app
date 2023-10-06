@@ -4,7 +4,7 @@ const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {User,validateRegisterUser,validateLoginUser}= require('../models/user.model')
-
+const {verifyTokenAndAdmin} = require("../middlewares/verifyToken")
 /**
  * @desc creating a new user 
  * @method Post 
@@ -56,22 +56,5 @@ router.post('/login',asyncHandler(async(req,res)=>{
 
  }
 ))
-
-/**
- * @desc Delete user 
- * @method delete 
- * @route /api/auth
- * @access public
- **/
-router.delete('/deleteuser/:id',asyncHandler(async(req,res)=>{
-
-   const {id}=req.params
-   try {
-      const user = await User.findByIdAndDelete(id)
-      res.status(200).json({message:"the user deleted successfully ",user})
-   } catch (error) {
-      res.status(404).json({errorMessage:error.details[0].message})
-   }
-}))
 
 module.exports=router;
