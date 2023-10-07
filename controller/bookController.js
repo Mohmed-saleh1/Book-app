@@ -57,7 +57,7 @@ const getAllBooks=asyncHandler(async(req,res)=>{
    if (book) {
        res.status(200).json(book)
    } else {
-       res.status(404).json(`there is no error for this id ${req.params.id}`)
+       res.status(404).json(`there is no book for this id ${req.params.id}`)
    }
 })
 

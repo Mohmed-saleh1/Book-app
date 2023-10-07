@@ -1,6 +1,5 @@
-const AutherModel = require('../models/auther.model.js')
-const asyncHandler = require('express-async-handler')
-const {validateCreateAuther,validateUpdateAuther} = require('../models/auther.model.js')
+ const asyncHandler = require('express-async-handler')
+const {Author,validateCreateAuther,validateUpdateAuther} = require('../models/auther.model.js')
 
 /**
  * @desc Get All authers
@@ -10,7 +9,7 @@ const {validateCreateAuther,validateUpdateAuther} = require('../models/auther.mo
  */
 const getAllAuthers=asyncHandler(async(req,res)=>{
     try {
-        const authers= await AutherModel.find({}).sort({firstName:-1}).select("firstName lastName -_id")
+        const authers= await Author.find({}).sort({firstName:-1}).select("firstName lastName -_id")
         res.status(200).json(authers);
     } catch (error) {
 
@@ -30,8 +29,12 @@ const getAllAuthers=asyncHandler(async(req,res)=>{
     const {id}= req.params
 
     try {
-        const auther = await AutherModel.findById(id)
+        const auther = await Author.findById(id)
+        if (auther) {
         res.status(200).json(auther)
+        }else{
+            res.status(404).json({errorMessage :`there is no user for this id ${id}`})
+        }
         
     } catch (error) {
 
@@ -52,7 +55,7 @@ const createAuther = asyncHandler(async(req,res)=>{
       if (error) return res.status(404).json({ErorMessage:error.details[0].message})
          
     try {
-     const auther = new AutherModel ({
+     const auther = new Author ({
          firstName:req.body.firstName,
          lastName:req.body.lastName,
          nationality:req.body.nationality,
@@ -87,7 +90,7 @@ const updateAuther = asyncHandler(async(req,res)=>{
 
    try {
        console.log(id)
-       const auther = await AutherModel.findByIdAndUpdate(id,{firstName,lastName},{new:true})
+       const auther = await Author.findByIdAndUpdate(id,{firstName,lastName},{new:true})
        res.status(200).json(auther)
        
    } catch (error) {
@@ -112,7 +115,7 @@ const deleteAuther = asyncHandler(async(req,res)=>{
    const {id}= req.params
 
    try {
-       const auther = await AutherModel.findByIdAndDelete(id)
+       const auther = await Author.findByIdAndDelete(id)
        res.status(200).json(auther)
        
    } catch (error) {
