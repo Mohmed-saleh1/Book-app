@@ -1,77 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const asyncHandler = require('express-async-handler')
-const bcrypt = require('bcryptjs')
-const {User,validateUpdateUser}= require('../models/user.model')
 const {verifyTokenAndAuthorization,verifyTokenAndAdmin} = require('../middlewares/verifyToken')
+const { getAllUsers, updateUser, getUserById, deleteUser } = require('../controller/usersController')
 
-/**
- * @desc Update user 
- * @method Put 
- * @route /api/auth
- * @access Private
- **/
-router.put('/:id',verifyTokenAndAuthorization,asyncHandler(async(req,res)=>{
+router.route("/").get(verifyTokenAndAdmin,getAllUsers)
 
-   const {error} = validateUpdateUser(req.body)
-   if (error) return res.status(404).json({errorMessage:error.details[0].message})
+router.route("/:id")
+   .get(verifyTokenAndAuthorization,getUserById)
+   .put(verifyTokenAndAuthorization,updateUser)
+   .delete(verifyTokenAndAdmin,deleteUser)
 
-   if(req.body.password) req.body.password = bcrypt.hashSync(req.body.password,10)
-   
-   const {id}=req.params
-   const user = await User.findByIdAndUpdate(id,{
-      $set:{
-        
-         email:req.body.email,
-         userName:req.body.userName,
-         password:req.body.password
-      }
-   },{new:true}).select('-password')
-    res.status(200).json(user)
-
-}))
-
-/**
- * @desc get all users
- * @method Post 
- * @route /api/auth
- * @access public
- **/
-router.get('/',verifyTokenAndAdmin,asyncHandler(async(req,res)=>{
-   const users = await User.find({}).select("-password")
-   if (users) {
-      return res.status(200).json({result:users.length,users})
-   }
-   res.status(404).json({Message:"there is no users"})
-}))
-
-/**
- * @desc get user by id
- * @method Post 
- * @route /api/users/id
- * @access private (only admins)
- **/
-router.get('/:id',verifyTokenAndAuthorization,asyncHandler(async(req,res)=>{
-   const users = await User.findById(req.params.id).select("-password")
-   if (users) {
-      return res.status(200).json({result:users.length,users})
-   }
-   res.status(404).json({Message:"there is no users"})
-}))
-/**
- * @desc Delete user 
- * @method delete 
- * @route /api/users/id
- * @access private (only admin & user himself )
- **/
-router.delete('/:id',verifyTokenAndAdmin,asyncHandler(async(req,res)=>{
-
-   const {id}=req.params
-   try {
-      const user = await User.findByIdAndDelete(id)
-      res.status(200).json({message:"the user deleted successfully ",user})
-   } catch (error) {
-      res.status(404).json({errorMessage:error.details[0].message})
-   }
-}))
 module.exports=router
