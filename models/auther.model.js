@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Joi = require('joi');
 
 const autherSchema = new mongoose.Schema({
     firstName:{
@@ -32,5 +33,26 @@ const autherSchema = new mongoose.Schema({
 },{timestamps:true})
 
 const Author = mongoose.model("Authers",autherSchema)
+//validate Update auther
+function validateUpdateAuther(obj){
+    const schema =Joi.object({
+        firstName:Joi.string().trim().min(3).max(50) ,
+        lastName:Joi.string().trim().min(3).max(50) ,
+        nationality:Joi.string().trim().min(3).max(50),
+        image:Joi.string().min(1).trim().max(20) 
+    }) 
+    return schema.validate(obj)   
+}
 
-module.exports = Author;
+//Validate create auther
+function validateCreateAuther(obj){
+
+    const schema =Joi.object({
+        firstName:Joi.string().trim().min(3).max(50).required(),
+        lastName:Joi.string().trim().min(3).max(50).required(),
+        nationality:Joi.string().trim().min(3).max(50),
+        image:Joi.string().min(1).trim().max(20).required()
+    }) 
+    return schema.validate(obj)  
+}
+module.exports = {Author,validateUpdateAuther,validateCreateAuther};
