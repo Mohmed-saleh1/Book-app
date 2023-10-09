@@ -16,7 +16,6 @@ const getAllAuthers=asyncHandler(async(req,res)=>{
         console.log(error);
         res.status(500).json({message:"something went wrong"})    
     }
-   
   })
 
   /**
@@ -43,6 +42,7 @@ const getAllAuthers=asyncHandler(async(req,res)=>{
         
     }
 })
+
 /**
  * @desc Create a New auther
  * @route /api/authers
@@ -71,6 +71,7 @@ const createAuther = asyncHandler(async(req,res)=>{
     }
      
  })
+ 
 /**
  * @desc Update an auther By ID
  * @route /api/authers/:id

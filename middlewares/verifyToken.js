@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken')
-
+const jwt=require('jsonwebtoken')
+//Verify Token
 function verifyToken(req,res,next){
     
     const {token} = req.headers
@@ -28,6 +28,7 @@ function verifyTokenAndAuthorization (req,res,next){
         }
     })
 }
+
 // Verify Token & Admin 
 function verifyTokenAndAdmin (req,res,next){
     verifyToken(req,res,()=>{
