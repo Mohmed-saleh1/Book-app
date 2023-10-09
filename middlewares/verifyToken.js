@@ -1,7 +1,7 @@
 const jwt=require('jsonwebtoken')
+
 //Verify Token
 function verifyToken(req,res,next){
-    
     const {token} = req.headers
       if (token) {
         try {
@@ -40,4 +40,5 @@ function verifyTokenAndAdmin (req,res,next){
         }
     })
 }
+
 module.exports={verifyToken,verifyTokenAndAuthorization,verifyTokenAndAdmin};
