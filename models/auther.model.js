@@ -33,6 +33,7 @@ const autherSchema = new mongoose.Schema({
 },{timestamps:true})
 
 const Author = mongoose.model("Authers",autherSchema)
+
 //validate Update auther
 function validateUpdateAuther(obj){
     const schema =Joi.object({
@@ -55,4 +56,5 @@ function validateCreateAuther(obj){
     }) 
     return schema.validate(obj)  
 }
+
 module.exports = {Author,validateUpdateAuther,validateCreateAuther};

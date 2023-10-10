@@ -3,6 +3,7 @@ const logger = require('./middlewares/logger.js')
 const {notFound,errorHandler} = require('./middlewares/errors')
 const dbConnection=require('./config/dbConnection')
       require('dotenv').config()
+
  
 // Database Connection
 dbConnection()
@@ -10,6 +11,8 @@ dbConnection()
 const app = express();
 
 //apply middlewares
+app.set('views engin','ejs')
+app.use(express.urlencoded({extended:false}))
 app.use(express.json());
 app.use(logger)
 
