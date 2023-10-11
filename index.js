@@ -33,6 +33,6 @@ app.use(errorHandler)
 
 //Running The Server
 const port = process.env.PORT
- app.listen(port,()=>{
+ app.listen(port,()=>{ 
 console.log(`server is working IN ${process.env.NODE_ENV} on port ${port}`);
  })
